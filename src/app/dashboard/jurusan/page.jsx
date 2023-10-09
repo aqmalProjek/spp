@@ -3,8 +3,10 @@ import React, { useEffect } from "react";
 import { useState } from "react";
 import supabase from "@/app/utils/supabase";
 import Link from "next/link";
+import { usePDF } from 'react-to-pdf';
 
-export default function page() {
+export default function Page() {
+  const { toPDF, targetRef } = usePDF({filename: 'page.pdf'});
   const [jurusan, setJurusan] = useState([]);
 
   const getJurusan = () => {
@@ -62,7 +64,7 @@ export default function page() {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [supabase]);
+  }, []);
 
   const hapusJurusan = async (id) => {
     if (confirm("Yakin menghapus jurusan")) {
@@ -80,7 +82,8 @@ export default function page() {
       <Link href={"/dashboard/jurusan/add"} className="btn btn-primary my-1">
         Tambah data
       </Link>
-      <table className="table">
+      <button onClick={() => toPDF()} className="btn btn-info d-block">Download PDF</button>
+      <table className="table" ref={targetRef}>
         <thead>
           <tr>
             <th scope="col">#</th>

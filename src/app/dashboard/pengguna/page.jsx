@@ -1,10 +1,9 @@
 "use client";
-import React, { useEffect } from "react";
-import { useState } from "react";
+import React, { useEffect,useState } from "react";
 import supabase from "@/app/utils/supabase";
 import Link from "next/link";
 
-export default function page() {
+export default function Page() {
   const [pengguna, setPengguna] = useState([]);
 
   const getPengguna = () => {
@@ -39,7 +38,7 @@ export default function page() {
     return () => {
       supabase.removeChannel(channel)
     }
-  }, [supabase]);
+  }, []);
 
   const hapuspengguna = async(id) => {
     if(confirm('Yakin menghapus pengguna')) {

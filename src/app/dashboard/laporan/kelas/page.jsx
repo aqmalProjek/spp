@@ -2,14 +2,11 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
 import supabase from "@/app/utils/supabase";
-import Link from "next/link";
-import DataTable from "react-data-table-component";
-import DataTableExtensions from 'react-data-table-component-extensions';
-import 'react-data-table-component-extensions/dist/index.css';
+import { usePDF } from "react-to-pdf";
 
 export default function Kelas() {
+  const { toPDF, targetRef } = usePDF({filename: 'Laporan Kelas.pdf'});
   const [kelas, setKelas] = useState([]);
-  const [loading, setLoading] = useState(true);
   const colums = [
     {
       name: "Nomor",
@@ -32,7 +29,6 @@ export default function Kelas() {
       sortable: true,
     },
   ];
-  let data = [];
 
   const getKelas = () => {
     setKelas([]);
@@ -57,11 +53,11 @@ export default function Kelas() {
        
       });
 
-    setLoading(false);
   };
 
   useEffect(() => {
     getKelas();
+    document.title = 'My Page Title';
   }, []);
 
   console.log(kelas);
@@ -118,20 +114,32 @@ export default function Kelas() {
 
   return (
     <div className="container">
-      
-      <DataTableExtensions
-      {...tableData}
-    >
+      <button onClick={() => toPDF()} className="btn btn-info d-block my-2">Download PDF</button>
+      <table className="table table-hover" ref={targetRef}>
+        <thead>
+          <tr>
+          
 
 
-      <DataTable
-        noHeader
-        defaultSortField="nomor"
-        defaultSortAsc={false}
-        pagination
-        highlightOnHover
-      ></DataTable>
-    </DataTableExtensions>
+            <th scope="col">Nomor</th>
+            <th scope="col">kode_kelas</th>
+            <th scope="col">tingkat</th>
+            <th scope="col">jurusan</th>
+          </tr>
+        </thead>
+        <tbody>
+          {kelas.length !== 0 &&(
+              kelas.map((k, index) => (
+                <tr key={index}>
+                  <td >{index + 1}</td>
+            <td >{k.kode_kelas}</td>
+            <td >{k.tingkat}</td>
+            <td >{k.jurusan}</td>
+                </tr>
+              ))
+            )}
+        </tbody>
+      </table>
     </div>
   );
 }

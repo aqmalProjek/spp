@@ -4,6 +4,7 @@ import supabase from "@/app/utils/supabase";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import emailjs from "@emailjs/browser";
+import { usePDF } from "react-to-pdf";
 
 export default function Kode_bayar_spp_transaksi({ params }) {
   const [singelPembayaran, setSinglePembayaran] = useState([]);
@@ -248,10 +249,14 @@ export default function Kode_bayar_spp_transaksi({ params }) {
 
 
   };
+  const { toPDF, targetRef } = usePDF({filename: `Kartu Spp ${singelPembayaran?.nis?.nama_siswa}.pdf`});
   return (
     <div className="container">
       {singelPembayaran?.length !== 0 ? (
-        <div className="row border">
+        <>
+        
+      <button onClick={() => toPDF()} className="btn btn-info d-block my-2">Download PDF</button>
+        <div className="row border" ref={targetRef}>
           <div className="col-md-12">
             <div className="row border-bottom pb-2">
               <div className="col-3 position-relative">
@@ -667,6 +672,7 @@ export default function Kode_bayar_spp_transaksi({ params }) {
             </div>
           </div>
         </div>
+        </>
       ) : (
         <div>kode tidak ada</div>
       )}
