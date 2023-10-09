@@ -1,0 +1,152 @@
+"use client"
+import supabase from '@/app/utils/supabase';
+import Link from 'next/link';
+import React, { useEffect, useState } from 'react'
+
+import { useRouter } from 'next/navigation'
+
+export default function EditJurusan({params}) {
+  const router = useRouter();
+    
+    const [message,setMessage] = useState("");
+    const [loading,setIsLoading] = useState(false);
+    
+    const [namaJurusan,setNamaJurusan] = useState('');
+    const [deskirpsiJurusan,setDeskripsiJurusan] = useState('');
+    const [singkatanJurusan,setSingkatanJurusan] = useState('');
+    const [kodeJurusan,setkodeJurusan] = useState('');
+
+
+    useEffect(() => {
+        getData()
+    },[])
+
+    const getData = async() => {
+        const {data: dataJurusan } = await supabase
+        .from("jurusan")
+        .select('id, nama , deskripsi,singkatan,kode_jurusan')
+        .eq('id',params.id)
+        .single();
+
+        setNamaJurusan(dataJurusan.nama);
+        setDeskripsiJurusan(dataJurusan.deskripsi);
+        setSingkatanJurusan(dataJurusan.singkatan);
+        setkodeJurusan(dataJurusan.kode_jurusan);
+
+    }
+
+    const editJurusan = async(e)=> {
+        e.preventDefault();
+        setIsLoading(true);
+        setMessage("");
+    
+        if(namaJurusan === ""){
+          setMessage("Please add nama Jurusan");
+          setIsLoading(false)
+          return;
+        }
+    
+        if(deskirpsiJurusan === ""){
+          setMessage("Please add deskirpsi Jurusan");
+          setIsLoading(false)
+          return;
+        }
+    
+        
+    
+        try {
+          const res = await supabase.from("jurusan").update({
+            nama : namaJurusan,
+            deskripsi : deskirpsiJurusan,
+            singkatan : singkatanJurusan,
+            kode_jurusan : kodeJurusan
+          }).eq('id',params.id);
+          setNamaJurusan("");
+          setDeskripsiJurusan("");
+          setSingkatanJurusan("");
+          setkodeJurusan("");
+          setMessage("Jurusan updated success fully..!");
+        } catch (error) {
+          console.log(error);
+        }
+        router.push('/dashboard/jurusan');
+        setIsLoading(false);
+    }
+
+
+
+  return (
+    <div className="container">
+        <p className="text-danger">{message}
+        &nbsp;
+        </p>
+{loading && (
+
+        <div className="spinner-border" role="status">
+  <span className="visually-hidden">Loading...</span>
+</div>
+)}
+
+      <div className="mb-3">
+        <label htmlFor="namajurusan" className="form-label">
+          Nama Jurusan
+        </label>
+        <input
+          type="text"
+          className="form-control"
+          id="namajurusan"
+          aria-describedby="emailHelp"
+          placeholder="Nama Jurusan"
+          value={namaJurusan}
+          onChange={(e) => setNamaJurusan(e.target.value)}
+        />
+      </div>
+      <div className="mb-3">
+        <label htmlFor="deskirpsi Jurusan" className="form-label">
+          Deskirpsi Jurusan
+        </label>
+        <input
+          type="text"
+          className="form-control"
+          id="deskirpsi Jurusan"
+          aria-describedby="emailHelp"
+          placeholder="Deskirpsi Jurusan"
+          value={deskirpsiJurusan}
+          onChange={(e) => setDeskripsiJurusan(e.target.value)}
+        />
+      </div>
+      <div className="mb-3">
+        <label htmlFor="singkatan Jurusan" className="form-label">
+          Singkatan Jurusan
+        </label>
+        <input
+          type="text"
+          className="form-control"
+          id="Singkatan Jurusan"
+          aria-describedby="emailHelp"
+          placeholder="Singkatan Jurusan"
+          value={singkatanJurusan}
+          onChange={(e) => setSingkatanJurusan(e.target.value)}
+        />
+      </div>
+
+      <div className="mb-3">
+        <label htmlFor="singkatan Jurusan" className="form-label">
+          Kode Jurusan
+        </label>
+        <input
+          type="text"
+          className="form-control"
+          id="Singkatan Jurusan"
+          aria-describedby="emailHelp"
+          placeholder="Singkatan Jurusan"
+          value={kodeJurusan}
+          onChange={(e) => setkodeJurusan(e.target.value)}
+        />
+      </div>
+
+      <button className="btn btn-primary " onClick={editJurusan} >Update jurusan</button>
+      <Link className="btn btn-danger ms-2" href={'/dashboard/jurusan'}>kembali</Link>
+    </div>
+  )
+}

@@ -1,0 +1,12 @@
+@import url(bootstrap.min.css);
+
+.bgLogin {
+    background: rgb(2,0,36);
+background: radial-gradient(circle, rgba(2,0,36,0.7091211484593838) 0%, rgba(9,9,121,0.6530987394957983) 50%, rgba(0,212,255,0.5438550420168067) 100%);
+}
+
+.centeringButton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
