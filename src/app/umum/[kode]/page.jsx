@@ -7,11 +7,7 @@ import emailjs from "@emailjs/browser";
 import { usePDF } from "react-to-pdf";
 
 export default function Kode_bayar_spp_transaksi({ params }) {
-  
-
-  
   const [singelPembayaran, setSinglePembayaran] = useState([]);
-  const [urlSend, setUrlSend] = useState('');
 
   const getSinglePembayaran = () => {
     supabase
@@ -19,7 +15,7 @@ export default function Kode_bayar_spp_transaksi({ params }) {
       .select(
         "kode_bayar_spp,kode_spp(nominal,kode_spp),nis(nis,email_wali,nama_siswa,nama_wali,kode_kelas(kode_kelas,jurusan_id(nama))),juli,agustus,september,oktober, november,desember,januari,februari,maret,april,mei,juni"
       )
-      .eq("kode_bayar_spp", params.kodebayar)
+      .eq("kode_bayar_spp", params.kode)
       .single()
       .then((result) => {
         setSinglePembayaran(result.data);
@@ -29,12 +25,7 @@ export default function Kode_bayar_spp_transaksi({ params }) {
 
   useEffect(() => {
     getSinglePembayaran();
-    setUrlSend(window.location.hostname);
   }, []);
-
-  console.log(urlSend);
-
-  
 
   console.log(singelPembayaran);
 
@@ -83,189 +74,14 @@ export default function Kode_bayar_spp_transaksi({ params }) {
 
   console.log(singelPembayaran);
 
-  const bayarSppHandle = async (bulan) => {
-    let res;
-    if (confirm("Yakin menghapus kelas")) {
-      switch (bulan) {
-        case "juli":
-          res = await supabase
-            .from("bayar_spp")
-            .update({
-              juli: singelPembayaran?.kode_spp?.nominal,
-            })
-            .eq("kode_bayar_spp", params.kodebayar);
-            console.log(res?.data);
-            await sendEMail(res,"juli",singelPembayaran?.nis?.email_wali,rupiah(singelPembayaran?.kode_spp?.nominal))
-          break;
-        case "agustus":
-          res = await supabase
-            .from("bayar_spp")
-            .update({
-              agustus: singelPembayaran?.kode_spp?.nominal,
-            })
-            .eq("kode_bayar_spp", params.kodebayar);
-            console.log(res?.data);
-            await sendEMail(res,"agustus",singelPembayaran?.nis?.email_wali,rupiah(singelPembayaran?.kode_spp?.nominal))
-          break;
-        case "september":
-          res = await supabase
-            .from("bayar_spp")
-            .update({
-              september: singelPembayaran?.kode_spp?.nominal,
-            })
-            .eq("kode_bayar_spp", params.kodebayar);
-            console.log(res?.data);
-            await sendEMail(res,"september",singelPembayaran?.nis?.email_wali,rupiah(singelPembayaran?.kode_spp?.nominal))
-          break;
-        case "oktober":
-          res = await supabase
-            .from("bayar_spp")
-            .update({
-              oktober: singelPembayaran?.kode_spp?.nominal,
-            })
-            .eq("kode_bayar_spp", params.kodebayar);
-            console.log(res?.data);
-            await sendEMail(res?.data,"oktober",singelPembayaran?.nis?.email_wali,rupiah(singelPembayaran?.kode_spp?.nominal))
-          break;
-        case "november":
-          res = await supabase
-            .from("bayar_spp")
-            .update({
-              november: singelPembayaran?.kode_spp?.nominal,
-            })
-            .eq("kode_bayar_spp", params.kodebayar);
 
-          console.log(res?.data);
-          await sendEMail(res,"november",singelPembayaran?.nis?.email_wali,rupiah(singelPembayaran?.kode_spp?.nominal))
-          break;
-        case "desember":
-          res = await supabase
-            .from("bayar_spp")
-            .update({
-              desember: singelPembayaran?.kode_spp?.nominal,
-            })
-            .eq("kode_bayar_spp", params.kodebayar);
-            console.log(res?.data);
-            await sendEMail(res,"desember",singelPembayaran?.nis?.email_wali,rupiah(singelPembayaran?.kode_spp?.nominal))
-          break;
-        case "januari":
-          res = await supabase
-            .from("bayar_spp")
-            .update({
-              januari: singelPembayaran?.kode_spp?.nominal,
-            })
-            .eq("kode_bayar_spp", params.kodebayar);
-            console.log(res?.data);
-            await sendEMail(res,"januari",singelPembayaran?.nis?.email_wali,rupiah(singelPembayaran?.kode_spp?.nominal))
-          break;
-        case "februari":
-          res = await supabase
-            .from("bayar_spp")
-            .update({
-              februari: singelPembayaran?.kode_spp?.nominal,
-            })
-            .eq("kode_bayar_spp", params.kodebayar);
-            console.log(res?.data);
-            await sendEMail(res,"februari",singelPembayaran?.nis?.email_wali,rupiah(singelPembayaran?.kode_spp?.nominal))
-          break;
-        case "maret":
-          res = await supabase
-            .from("bayar_spp")
-            .update({
-              maret: singelPembayaran?.kode_spp?.nominal,
-            })
-            .eq("kode_bayar_spp", params.kodebayar);
-            console.log(res?.data);
-            await sendEMail(res,"maret",singelPembayaran?.nis?.email_wali,rupiah(singelPembayaran?.kode_spp?.nominal))
-          break;
-        case "april":
-          res = await supabase
-            .from("bayar_spp")
-            .update({
-              april: singelPembayaran?.kode_spp?.nominal,
-            })
-            .eq("kode_bayar_spp", params.kodebayar);
-          break;
-        case "mei":
-          res = await supabase
-            .from("bayar_spp")
-            .update({
-              mei: singelPembayaran?.kode_spp?.nominal,
-            })
-            .eq("kode_bayar_spp", params.kodebayar);
-            console.log(res?.data);
-            if(res.status === 204 ) {
-
-              await sendEMail(res,"mei",singelPembayaran?.nis?.email_wali,rupiah(singelPembayaran?.kode_spp?.nominal))
-            }
-          break;
-        case "juni":
-          res = await supabase
-            .from("bayar_spp")
-            .update({
-              juni: singelPembayaran?.kode_spp?.nominal,
-            })
-            .eq("kode_bayar_spp", params.kodebayar);
-            console.log(res?.data);
-            await sendEMail(res?.data,"juni",singelPembayaran?.nis?.email_wali,rupiah(singelPembayaran?.kode_spp?.nominal))
-          break;
-      }
-    } else {
-      console.log("tidak");
-    }
-
-    console.log(res);
-  };
-
-  const sendEMail = async (res, bulan, penerima,nominal) => {
-
-    console.log('res di sending : ',res);
-    
-
-      const total_spp = rupiah(
-        singelPembayaran?.juli +
-          singelPembayaran?.agustus +
-          singelPembayaran?.september +
-          singelPembayaran?.oktober +
-          singelPembayaran?.november +
-          singelPembayaran?.desember +
-          singelPembayaran?.januari +
-          singelPembayaran?.februari +
-          singelPembayaran?.maret +
-          singelPembayaran?.april +
-          singelPembayaran?.mei +
-          singelPembayaran?.juni + singelPembayaran?.kode_spp?.nominal
-      );
-      const total_uts1 = rupiah(singelPembayaran?.kode_spp?.nominal * 3);
-      const total_uas1 = rupiah(singelPembayaran?.kode_spp?.nominal * 6);
-      const total_uts2 = rupiah(singelPembayaran?.kode_spp?.nominal * 9);
-      const total_uas2 = rupiah(singelPembayaran?.kode_spp?.nominal * 12);
-  
-      const sending = await emailjs.send("service_2tk0fuf", "template_8gseovo", {
-        nama_siswa: singelPembayaran?.nis.nama_siswa,
-        bulan_bayar: bulan,
-        reply_to: penerima,
-        nominal,
-        nama_wali : singelPembayaran?.nis?.nama_wali,
-        total_spp,
-        total_uts1,
-        total_uas1,
-        total_uts2,
-        total_uas2,
-        linkspp : urlSend + '/umum/'+singelPembayaran?.kode_bayar_spp
-      },'lqQNmGqd4E8EneUPo');
-      console.log(sending);
-    
-
-
-  };
   const { toPDF, targetRef } = usePDF({filename: `Kartu Spp ${singelPembayaran?.nis?.nama_siswa}.pdf`});
   return (
     <div className="container">
       {singelPembayaran?.length !== 0 ? (
         <>
         
-      <button onClick={() => toPDF()} className="btn btn-info d-block my-2">Download PDF</button>
+      <button onClick={() => toPDF()} className="btn btn-info d-block my-2">Cetak Kartu</button>
         <div className="row border" ref={targetRef}>
           <div className="col-md-12">
             <div className="row border-bottom pb-2">
@@ -377,16 +193,9 @@ export default function Kode_bayar_spp_transaksi({ params }) {
                     {singelPembayaran?.juli !== null ? (
                       <div className="" style={{position: 'relative'}}>
 
-                        <Image src={'/lunas.png'} height="200" width="200" style={{objectFit: "contain"}} alt=".."/>
+                        <Image src={'/lunas.png'} height="200" width="200" style={{objectFit: "contain"}} alt=""/>
                       </div>
-                    ) : (
-                      <button
-                        className="btn btn-success"
-                        onClick={() => bayarSppHandle("juli")}
-                      >
-                        Bayar Spp
-                      </button>
-                    )}
+                    ) : null}
                   </div>
                 </div>
               </div>
@@ -403,17 +212,9 @@ export default function Kode_bayar_spp_transaksi({ params }) {
                     {singelPembayaran?.agustus !== null ? (
                       <div className="" style={{position: 'relative'}}>
 
-                        <Image src={'/lunas.png'} height="200" width="200" style={{objectFit: "contain"}} alt=".."/>
+                        <Image src={'/lunas.png'} height="200" width="200" style={{objectFit: "contain"}} alt=""/>
                       </div>
-                    ) : (
-                      <button
-                        className="btn btn-success"
-                        disabled={singelPembayaran?.juli === null && true}
-                        onClick={() => bayarSppHandle("agustus")}
-                      >
-                        Bayar Spp
-                      </button>
-                    )}
+                    ) : null }
                   </div>
                 </div>
               </div>
@@ -430,17 +231,9 @@ export default function Kode_bayar_spp_transaksi({ params }) {
                     {singelPembayaran?.september !== null ? (
                       <div className="" style={{position: 'relative'}}>
 
-                        <Image src={'/lunas.png'} height="200" width="200" style={{objectFit: "contain"}} alt=".."/>
+                        <Image src={'/lunas.png'} height="200" width="200" style={{objectFit: "contain"}} alt=""/>
                       </div>
-                    ) : (
-                      <button
-                        className={`btn btn-success`}
-                        disabled={singelPembayaran?.agustus === null && true}
-                        onClick={() => bayarSppHandle("september")}
-                      >
-                        Bayar Spp
-                      </button>
-                    )}
+                    ) : null}
                   </div>
                 </div>
               </div>
@@ -457,17 +250,9 @@ export default function Kode_bayar_spp_transaksi({ params }) {
                     {singelPembayaran?.oktober !== null ? (
                       <div className="" style={{position: 'relative'}}>
 
-                        <Image src={'/lunas.png'} height="200" width="200" style={{objectFit: "contain"}} alt=".."/>
+                        <Image src={'/lunas.png'} height="200" width="200" style={{objectFit: "contain"}} alt=""/>
                       </div>
-                    ) : (
-                      <button
-                        className="btn btn-success"
-                        disabled={singelPembayaran?.september === null && true}
-                        onClick={() => bayarSppHandle("oktober")}
-                      >
-                        Bayar Spp
-                      </button>
-                    )}
+                    ) : null }
                   </div>
                 </div>
               </div>
@@ -484,17 +269,9 @@ export default function Kode_bayar_spp_transaksi({ params }) {
                     {singelPembayaran?.november !== null ? (
                       <div className="" style={{position: 'relative'}}>
 
-                        <Image src={'/lunas.png'} height="200" width="200" style={{objectFit: "contain"}} alt=".."/>
+                        <Image src={'/lunas.png'} height="200" width="200" style={{objectFit: "contain"}} alt=""/>
                       </div>
-                    ) : (
-                      <button
-                        className="btn btn-success"
-                        disabled={singelPembayaran?.oktober === null && true}
-                        onClick={() => bayarSppHandle("november")}
-                      >
-                        Bayar Spp
-                      </button>
-                    )}
+                    ) : null }
                   </div>
                 </div>
               </div>
@@ -511,17 +288,9 @@ export default function Kode_bayar_spp_transaksi({ params }) {
                     {singelPembayaran?.desember !== null ? (
                       <div className="" style={{position: 'relative'}}>
 
-                        <Image src={'/lunas.png'} height="200" width="200" style={{objectFit: "contain"}} alt=".."/>
+                        <Image src={'/lunas.png'} height="200" width="200" style={{objectFit: "contain"}} alt=""/>
                       </div>
-                    ) : (
-                      <button
-                        className="btn btn-success"
-                        disabled={singelPembayaran?.november === null && true}
-                        onClick={() => bayarSppHandle("desember")}
-                      >
-                        Bayar Spp
-                      </button>
-                    )}
+                    ) : null }
                   </div>
                 </div>
               </div>
@@ -538,17 +307,9 @@ export default function Kode_bayar_spp_transaksi({ params }) {
                     {singelPembayaran?.januari !== null ? (
                       <div className="" style={{position: 'relative'}}>
 
-                        <Image src={'/lunas.png'} height="200" width="200" style={{objectFit: "contain"}} alt=".."/>
+                        <Image src={'/lunas.png'} height="200" width="200" style={{objectFit: "contain"}} alt=""/>
                       </div>
-                    ) : (
-                      <button
-                        className="btn btn-success"
-                        disabled={singelPembayaran?.desember === null && true}
-                        onClick={() => bayarSppHandle("januari")}
-                      >
-                        Bayar Spp
-                      </button>
-                    )}
+                    ) : null }
                   </div>
                 </div>
               </div>
@@ -565,17 +326,9 @@ export default function Kode_bayar_spp_transaksi({ params }) {
                     {singelPembayaran?.februari !== null ? (
                       <div className="" style={{position: 'relative'}}>
 
-                        <Image src={'/lunas.png'} height="200" width="200" style={{objectFit: "contain"}} alt=".."/>
+                        <Image src={'/lunas.png'} height="200" width="200" style={{objectFit: "contain"}} alt=""/>
                       </div>
-                    ) : (
-                      <button
-                        className="btn btn-success"
-                        disabled={singelPembayaran?.januari === null && true}
-                        onClick={() => bayarSppHandle("februari")}
-                      >
-                        Bayar Spp
-                      </button>
-                    )}
+                    ) : null }
                   </div>
                 </div>
               </div>
@@ -590,17 +343,9 @@ export default function Kode_bayar_spp_transaksi({ params }) {
                     {singelPembayaran?.maret !== null ? (
                       <div className="" style={{position: 'relative'}}>
 
-                        <Image src={'/lunas.png'} height="200" width="200" style={{objectFit: "contain"}} alt=".."/>
+                        <Image src={'/lunas.png'} height="200" width="200" style={{objectFit: "contain"}} alt=""/>
                       </div>
-                    ) : (
-                      <button
-                        className="btn btn-success"
-                        disabled={singelPembayaran?.februari === null && true}
-                        onClick={() => bayarSppHandle("maret")}
-                      >
-                        Bayar Spp
-                      </button>
-                    )}
+                    ) : null }
                   </div>
                 </div>
               </div>
@@ -615,17 +360,9 @@ export default function Kode_bayar_spp_transaksi({ params }) {
                     {singelPembayaran?.april !== null ? (
                       <div className="" style={{position: 'relative'}}>
 
-                        <Image src={'/lunas.png'} height="200" width="200" style={{objectFit: "contain"}} alt=".."/>
+                        <Image src={'/lunas.png'} height="200" width="200" style={{objectFit: "contain"}} alt=""/>
                       </div>
-                    ) : (
-                      <button
-                        className="btn btn-success"
-                        disabled={singelPembayaran?.maret === null && true}
-                        onClick={() => bayarSppHandle("april")}
-                      >
-                        Bayar Spp
-                      </button>
-                    )}
+                    ) : null }
                   </div>
                 </div>
               </div>
@@ -640,17 +377,9 @@ export default function Kode_bayar_spp_transaksi({ params }) {
                     {singelPembayaran?.mei !== null ? (
                       <div className="" style={{position: 'relative'}}>
 
-                        <Image src={'/lunas.png'} height="200" width="200" style={{objectFit: "contain"}} alt=".."/>
+                        <Image src={'/lunas.png'} height="200" width="200" style={{objectFit: "contain"}} alt=""/>
                       </div>
-                    ) : (
-                      <button
-                        className="btn btn-success"
-                        disabled={singelPembayaran?.april === null && true}
-                        onClick={() => bayarSppHandle("mei")}
-                      >
-                        Bayar Spp
-                      </button>
-                    )}
+                    ) : null }
                   </div>
                 </div>
               </div>
@@ -665,17 +394,9 @@ export default function Kode_bayar_spp_transaksi({ params }) {
                     {singelPembayaran?.juni !== null ? (
                       <div className="" style={{position: 'relative'}}>
 
-                        <Image src={'/lunas.png'} height="200" width="200" style={{objectFit: "contain"}} alt=".."/>
+                        <Image src={'/lunas.png'} height="200" width="200" style={{objectFit: "contain"}} alt=""/>
                       </div>
-                    ) : (
-                      <button
-                        className="btn btn-success"
-                        disabled={singelPembayaran?.mei === null && true}
-                        onClick={() => bayarSppHandle("juni")}
-                      >
-                        Bayar Spp
-                      </button>
-                    )}
+                    ) : null }
                   </div>
                 </div>
               </div>
