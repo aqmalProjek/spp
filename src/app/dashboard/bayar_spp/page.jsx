@@ -10,6 +10,8 @@ export default function TampilBayar_spp() {
   const [rowsRecord, setRowsRecord] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  
+
   const colums = [
     {
       name: "Nomor",

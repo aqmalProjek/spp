@@ -7,22 +7,62 @@ import { usePDF } from "react-to-pdf";
 export default function TampilPembayaran() {
     const router = useRouter();
 
+    const [tahunAwal, setTahunAwal] = useState('');
+    const [tahunAkhir, setTahunAkhir] = useState('');
+    const [namasekolah, setNamasekolah] = useState('');
+    const [tahungLengkap,setTahunLengkap] = useState('');
+
+
+    const getSetting = () => {
+      supabase
+        .from("setting")
+        .select("*")
+        .eq('id',1)
+        .single()
+        .then((result) => {
+          let tahun_awal,tahun_akhir;
+
+          tahun_awal = result.data.tahun_ajaran_sekarang;
+          tahun_awal = tahun_awal.split("-");
+          tahun_awal = tahun_awal[0];
+
+          tahun_akhir = result.data.tahun_ajaran_sekarang;
+          tahun_akhir = tahun_akhir.split("-");
+          tahun_akhir = tahun_akhir[1];
+
+          setTahunAwal(tahun_awal)
+          setTahunAkhir(tahun_akhir)
+          setNamasekolah(result.data.nama_sekolah);
+let tahun_lengkap = tahun_awal + tahun_akhir
+          setTahunLengkap(tahun_lengkap);
+
+
+          console.log('tahun lengkap : ',tahun_lengkap);
+          console.log('setting sebelum di setting : ',result.data);
+        });
+    };
+
+
     const [kodeBayar_spp,setKodeBayar_spp] = useState("");
     const [dataSpp,setDataSpp] = useState([]);
+
+    //SPPX002324000002
 
     const getData = () => {
       supabase.from("bayar_spp")
       .select(
-        "kode_bayar_spp,kode_spp(nominal,kode_spp),nis(nis,nama_siswa,kode_kelas),juli,agustus,september,oktober, november,desember,januari,februari,maret,april,mei,juni"
+        "kode_bayar_spp,tahun_ajaran,kode_spp(nominal,kode_spp),nis(nis,nama_siswa,kode_kelas),juli,agustus,september,oktober, november,desember,januari,februari,maret,april,mei,juni"
       )
       .order("created_at", { ascending: false })
       .then((result) => {
         setDataSpp(result.data)
+        console.log('data spp : ',result.data);
       })
     }
 
     useEffect(() => {
       getData()
+      getSetting()
     
       
     }, [])
@@ -55,8 +95,14 @@ export default function TampilPembayaran() {
          <datalist id="datalistOptions">
           {dataSpp.length !== 0 &&
             dataSpp.map((j, index) => (
-              <option key={index} value={j.kode_bayar_spp}>
-                {`${j.nis.nis} - ${j.nis.kode_kelas} - ${j.nis.nama_siswa}`}
+              <option key={index} value={j.kode_bayar_spp} className="bg-light">
+               {j.tahun_ajaran === tahungLengkap ? (
+                
+                `${j.nis.nis} - ${j.nis.kode_kelas} - ${j.nis.nama_siswa} `
+               ) : (
+                `${j.nis.nis} - ${j.nis.kode_kelas} - ${j.nis.nama_siswa} - belum lunas ${j.tahun_ajaran}`
+               )}
+
               </option>
             ))}
         </datalist>

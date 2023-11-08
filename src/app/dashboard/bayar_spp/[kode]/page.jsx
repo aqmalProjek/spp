@@ -102,6 +102,7 @@ export default function EditBayarSpp({params}) {
         kode_bayar_spp,
         nis,
         kode_spp : kodeSpp,
+        tahun_ajar : tahunAjar,
         total_spp
       }).eq('kode_bayar_spp',params.kode);
       console.log(res);
@@ -239,7 +240,7 @@ export default function EditBayarSpp({params}) {
 
       <div className="mb-3">
         <label htmlFor="kode_urut" className="form-label">
-          Angkatan
+        Tahun Periode
         </label>
         <input
           type="number"

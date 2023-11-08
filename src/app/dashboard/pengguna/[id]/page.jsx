@@ -161,6 +161,7 @@ export default function EditPengguna({params}) {
 
               <option value={"ADMIN"}>ADMIN</option>
               <option value={"PEGAWAI"}>PEGAWAI</option>
+              <option value={"KEPALA SEKOLAH"}>KEPALA SEKOLAH</option>
             </select>
       </div>
 

@@ -4,13 +4,21 @@ import { useState } from "react";
 import supabase from "@/app/utils/supabase";
 import "react-data-table-component-extensions/dist/index.css";
 import { usePDF } from "react-to-pdf";
+import { rupiah } from "@/app/utils/helperFunction";
+import { useSession } from "next-auth/react";
+import Image from "next/image";
 
 export default function TampilBayar_spp() {
+  const {data : session, status} = useSession();
   const { toPDF, targetRef } = usePDF({filename: 'Laporan pembayaran.pdf'});
   const [bayar_spp, setBayar_spp] = useState([]);
   const [loading, setLoading] = useState(true);
   const [opsiLunas, setOpsiLunas] = useState("Semua");
   const [opsiLunasForm, setOpsiLunasForm] = useState("Semua");
+
+  let tanggalSekarang = new Date();
+
+  console.log('tgl sekarang ', tanggalSekarang);
 
   const colums = [
     {
@@ -46,7 +54,7 @@ export default function TampilBayar_spp() {
     supabase
       .from("bayar_spp")
       .select(
-        "kode_bayar_spp,kode_spp(nominal,kode_spp),nis(nis),juli,agustus,september,oktober, november,desember,januari,februari,maret,april,mei,juni"
+        "kode_bayar_spp,kode_spp(nominal,kode_spp),nis(nis,nama_siswa,kode_kelas),juli,agustus,september,oktober, november,desember,januari,februari,maret,april,mei,juni,status,bulan_terakhir_bayar"
       )
       .order("created_at", { ascending: false })
       .then((result) => {
@@ -55,10 +63,27 @@ export default function TampilBayar_spp() {
             ...bayar_spp,
             {
               nomor: index + 1,
+              nis: k.nis.nis,
+              nama_siswa: k.nis.nama_siswa,
+              kode_kelas: k.nis.kode_kelas,
               kode_bayar_spp: k.kode_bayar_spp,
               kode_spp: k.kode_spp.kode_spp,
-              nis: k.nis.nis,
               nominal: k.kode_spp.nominal,
+              kode_kelas: k.nis.kode_kelas,
+              status : k.status,
+              bulan_terakhir_bayar : k.bulan_terakhir_bayar,
+              juli : k.juli,
+              agustus : k.agustus,
+              september : k.september,
+              oktober : k.oktober,
+              november : k.november,
+              desember : k.desember,
+              januari : k.januari,
+              februari : k.februari,
+              maret : k.maret,
+              april : k.april,
+              mei : k.mei,
+              juni : k.juni,
             },
           ]);
         });
@@ -157,7 +182,7 @@ export default function TampilBayar_spp() {
       supabase
         .from("bayar_spp")
         .select(
-          "kode_bayar_spp,kode_spp(nominal,kode_spp),nis(nis),juli,agustus,september,oktober, november,desember,januari,februari,maret,april,mei,juni"
+          "kode_bayar_spp,kode_spp(nominal,kode_spp),nis(nis,nama_siswa,kode_kelas),juli,agustus,september,oktober, november,desember,januari,februari,maret,april,mei,juni,status,bulan_terakhir_bayar"
         )
         .order("created_at", { ascending: false })
         .then((result) => {
@@ -166,10 +191,27 @@ export default function TampilBayar_spp() {
               ...bayar_spp,
               {
                 nomor: index + 1,
-                kode_bayar_spp: k.kode_bayar_spp,
-                kode_spp: k.kode_spp.kode_spp,
-                nis: k.nis.nis,
-                nominal: k.kode_spp.nominal,
+              nis: k.nis.nis,
+              nama_siswa: k.nis.nama_siswa,
+              kode_kelas: k.nis.kode_kelas,
+              kode_bayar_spp: k.kode_bayar_spp,
+              kode_spp: k.kode_spp.kode_spp,
+              nominal: k.kode_spp.nominal,
+              kode_kelas: k.nis.kode_kelas,
+              status : k.status,
+              bulan_terakhir_bayar : k.bulan_terakhir_bayar,
+              juli : k.juli,
+              agustus : k.agustus,
+              september : k.september,
+              oktober : k.oktober,
+              november : k.november,
+              desember : k.desember,
+              januari : k.januari,
+              februari : k.februari,
+              maret : k.maret,
+              april : k.april,
+              mei : k.mei,
+              juni : k.juni,
               },
             ]);
           });
@@ -185,7 +227,7 @@ export default function TampilBayar_spp() {
       supabase
         .from("bayar_spp")
         .select(
-          "kode_bayar_spp,kode_spp(nominal,kode_spp),nis(nis),juli,agustus,september,oktober, november,desember,januari,februari,maret,april,mei,juni"
+          "kode_bayar_spp,kode_spp(nominal,kode_spp),nis(nis,nama_siswa,kode_kelas),juli,agustus,september,oktober, november,desember,januari,februari,maret,april,mei,juni,status,bulan_terakhir_bayar"
         )
         .order("created_at", { ascending: false })
         .not("september", "is", null)
@@ -195,10 +237,27 @@ export default function TampilBayar_spp() {
               ...bayar_spp,
               {
                 nomor: index + 1,
-                kode_bayar_spp: k.kode_bayar_spp,
-                kode_spp: k.kode_spp.kode_spp,
-                nis: k.nis.nis,
-                nominal: k.kode_spp.nominal,
+              nis: k.nis.nis,
+              nama_siswa: k.nis.nama_siswa,
+              kode_kelas: k.nis.kode_kelas,
+              kode_bayar_spp: k.kode_bayar_spp,
+              kode_spp: k.kode_spp.kode_spp,
+              nominal: k.kode_spp.nominal,
+              kode_kelas: k.nis.kode_kelas,
+              status : k.status,
+              bulan_terakhir_bayar : k.bulan_terakhir_bayar,
+              juli : k.juli,
+              agustus : k.agustus,
+              september : k.september,
+              oktober : k.oktober,
+              november : k.november,
+              desember : k.desember,
+              januari : k.januari,
+              februari : k.februari,
+              maret : k.maret,
+              april : k.april,
+              mei : k.mei,
+              juni : k.juni,
               },
             ]);
           });
@@ -210,7 +269,7 @@ export default function TampilBayar_spp() {
       supabase
         .from("bayar_spp")
         .select(
-          "kode_bayar_spp,kode_spp(nominal,kode_spp),nis(nis),juli,agustus,september,oktober, november,desember,januari,februari,maret,april,mei,juni"
+          "kode_bayar_spp,kode_spp(nominal,kode_spp),nis(nis,nama_siswa,kode_kelas),juli,agustus,september,oktober, november,desember,januari,februari,maret,april,mei,juni,status,bulan_terakhir_bayar"
         )
         .order("created_at", { ascending: false })
         .not("desember", "is", null)
@@ -220,10 +279,27 @@ export default function TampilBayar_spp() {
               ...bayar_spp,
               {
                 nomor: index + 1,
-                kode_bayar_spp: k.kode_bayar_spp,
-                kode_spp: k.kode_spp.kode_spp,
-                nis: k.nis.nis,
-                nominal: k.kode_spp.nominal,
+              nis: k.nis.nis,
+              nama_siswa: k.nis.nama_siswa,
+              kode_kelas: k.nis.kode_kelas,
+              kode_bayar_spp: k.kode_bayar_spp,
+              kode_spp: k.kode_spp.kode_spp,
+              nominal: k.kode_spp.nominal,
+              kode_kelas: k.nis.kode_kelas,
+              status : k.status,
+              bulan_terakhir_bayar : k.bulan_terakhir_bayar,
+              juli : k.juli,
+              agustus : k.agustus,
+              september : k.september,
+              oktober : k.oktober,
+              november : k.november,
+              desember : k.desember,
+              januari : k.januari,
+              februari : k.februari,
+              maret : k.maret,
+              april : k.april,
+              mei : k.mei,
+              juni : k.juni,
               },
             ]);
           });
@@ -235,7 +311,7 @@ export default function TampilBayar_spp() {
       supabase
         .from("bayar_spp")
         .select(
-          "kode_bayar_spp,kode_spp(nominal,kode_spp),nis(nis),juli,agustus,september,oktober, november,desember,januari,februari,maret,april,mei,juni"
+          "kode_bayar_spp,kode_spp(nominal,kode_spp),nis(nis,nama_siswa,kode_kelas),juli,agustus,september,oktober, november,desember,januari,februari,maret,april,mei,juni,status,bulan_terakhir_bayar"
         )
         .order("created_at", { ascending: false })
         .not("maret", "is", null)
@@ -245,10 +321,27 @@ export default function TampilBayar_spp() {
               ...bayar_spp,
               {
                 nomor: index + 1,
-                kode_bayar_spp: k.kode_bayar_spp,
-                kode_spp: k.kode_spp.kode_spp,
-                nis: k.nis.nis,
-                nominal: k.kode_spp.nominal,
+              nis: k.nis.nis,
+              nama_siswa: k.nis.nama_siswa,
+              kode_kelas: k.nis.kode_kelas,
+              kode_bayar_spp: k.kode_bayar_spp,
+              kode_spp: k.kode_spp.kode_spp,
+              nominal: k.kode_spp.nominal,
+              kode_kelas: k.nis.kode_kelas,
+              status : k.status,
+              bulan_terakhir_bayar : k.bulan_terakhir_bayar,
+              juli : k.juli,
+              agustus : k.agustus,
+              september : k.september,
+              oktober : k.oktober,
+              november : k.november,
+              desember : k.desember,
+              januari : k.januari,
+              februari : k.februari,
+              maret : k.maret,
+              april : k.april,
+              mei : k.mei,
+              juni : k.juni,
               },
             ]);
           });
@@ -260,7 +353,7 @@ export default function TampilBayar_spp() {
       supabase
         .from("bayar_spp")
         .select(
-          "kode_bayar_spp,kode_spp(nominal,kode_spp),nis(nis),juli,agustus,september,oktober, november,desember,januari,februari,maret,april,mei,juni"
+          "kode_bayar_spp,kode_spp(nominal,kode_spp),nis(nis,nama_siswa,kode_kelas),juli,agustus,september,oktober, november,desember,januari,februari,maret,april,mei,juni,status,bulan_terakhir_bayar"
         )
         .order("created_at", { ascending: false })
         .not("juni", "is", null)
@@ -270,10 +363,27 @@ export default function TampilBayar_spp() {
               ...bayar_spp,
               {
                 nomor: index + 1,
-                kode_bayar_spp: k.kode_bayar_spp,
-                kode_spp: k.kode_spp.kode_spp,
-                nis: k.nis.nis,
-                nominal: k.kode_spp.nominal,
+              nis: k.nis.nis,
+              nama_siswa: k.nis.nama_siswa,
+              kode_kelas: k.nis.kode_kelas,
+              kode_bayar_spp: k.kode_bayar_spp,
+              kode_spp: k.kode_spp.kode_spp,
+              nominal: k.kode_spp.nominal,
+              kode_kelas: k.nis.kode_kelas,
+              status : k.status,
+              bulan_terakhir_bayar : k.bulan_terakhir_bayar,
+              juli : k.juli,
+              agustus : k.agustus,
+              september : k.september,
+              oktober : k.oktober,
+              november : k.november,
+              desember : k.desember,
+              januari : k.januari,
+              februari : k.februari,
+              maret : k.maret,
+              april : k.april,
+              mei : k.mei,
+              juni : k.juni,
               },
             ]);
           });
@@ -347,15 +457,54 @@ export default function TampilBayar_spp() {
         </div>
       </div>
       <button onClick={() => toPDF()} className="btn btn-info d-block my-2">Download PDF</button>
+      
       <p className="text-warning">Filter menunjukan : {opsiLunas}</p>
-      <table className="table table-hover" ref={targetRef}>
+      <div ref={targetRef}>
+      <div className="col-md-12">
+            <div className="row border-bottom pb-2">
+              <div className="col-3 position-relative">
+                <Image
+                  src="/logoyayasan.png"
+                  alt=".."
+                  width={200}
+                  height={200}
+                  objectFit="center"
+                />
+              </div>
+              <div className="col-9">
+                <div className="row">
+                  <div className="col-12">
+                    <p align="center">
+                      Yayasan Pendidikan Dasar Dan Menengah BAKTINUSANTARA 666
+                    </p>
+                  </div>
+                  <div className="col-12">
+                    <h3 align="center">SMK BAKTI NUSANTARA 666</h3>
+                  </div>
+                  <div className="col-12">
+                    <p align="center">Terakreditasi A</p>
+                  </div>
+                  <div className="col-12">
+                    <p align="center">
+                      Jl. Percobaan No. 65 Cileunyi Kab. Bandung (022)70721934
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+      <p>Tanggal Laporan : {tanggalSekarang.getDate()} - {tanggalSekarang.getMonth()} - {tanggalSekarang.getFullYear()}</p>
+      <table className="table table-hover" >
         <thead>
           <tr>
             <th scope="col">Nomor</th>
             <th scope="col">kode_bayar_spp</th>
-            <th scope="col">kode_spp</th>
-            <th scope="col">nis</th>
-            <th scope="col">nominal</th>
+            <th scope="col">Nama Siswa</th>
+            <th scope="col">Kelas Siswa</th>
+            <th scope="col">Biaya Bulanan</th>
+            <th scope="col">status</th>
+            <th scope="col">Bulan Terakhir Bayar</th>
+            <th scope="col">Dana Terkumpul</th>
           </tr>
         </thead>
         <tbody>
@@ -364,14 +513,38 @@ export default function TampilBayar_spp() {
                 <tr key={index}>
                   <td >{index + 1}</td>
             <td >{k.kode_bayar_spp}</td>
-            <td >{k.kode_spp}</td>
-            <td >{k.nis}</td>
-            <td >{k.nominal}</td>
+            <td >{k.nama_siswa}</td>
+            <td >{k.kode_kelas}</td>
+            <td >{rupiah(k.nominal)}</td>
+            <td >{k.status}</td>
+            <td>{k.bulan_terakhir_bayar}</td>
+            <td>{rupiah(
+              k.juli +
+              k.agustus +
+              k.september +
+              k.oktober +
+              k.november +
+              k.desember +
+              k.januari +
+              k.februari +
+              k.maret +
+              k.april +
+              k.mei +
+              k.juni
+            )}</td>
                 </tr>
               ))
             )}
         </tbody>
       </table>
+
+
+      <p>Hormat Kami,</p>
+      <br />
+      <br />
+      <br />
+      <p>{session?.user?.name}</p>
+      </div>
     </div>
   );
 }

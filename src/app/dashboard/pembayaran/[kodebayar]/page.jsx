@@ -5,27 +5,41 @@ import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import emailjs from "@emailjs/browser";
 import { usePDF } from "react-to-pdf";
+import { useSession } from "next-auth/react";
 
 export default function Kode_bayar_spp_transaksi({ params }) {
   
+  const {data : session, status} = useSession();
 
+  console.log('data sesion : ' , session);
   
   const [singelPembayaran, setSinglePembayaran] = useState([]);
   const [urlSend, setUrlSend] = useState('');
+  const [detailPembayaran,setDetailPembayaran] = useState([]);
 
+  
   const getSinglePembayaran = () => {
     supabase
-      .from("bayar_spp")
-      .select(
-        "kode_bayar_spp,kode_spp(nominal,kode_spp),nis(nis,email_wali,nama_siswa,nama_wali,kode_kelas(kode_kelas,jurusan_id(nama))),juli,agustus,september,oktober, november,desember,januari,februari,maret,april,mei,juni"
+    .from("bayar_spp")
+    .select(
+      "kode_bayar_spp,kode_spp(nominal,kode_spp),nis(nis,email_wali,nama_siswa,nama_wali,kode_kelas(kode_kelas,jurusan_id(nama))),juli,agustus,september,oktober, november,desember,januari,februari,maret,april,mei,juni"
       )
       .eq("kode_bayar_spp", params.kodebayar)
       .single()
       .then((result) => {
         setSinglePembayaran(result.data);
+        
+        supabase.from('detail_pembayaran').select('*').eq('kode_bayar_spp',result.data.kode_bayar_spp).then(
+          (result) => {
+            setDetailPembayaran(result.data);
+            console.log('detail bayar : ',result.data);
+          }
+        )
         console.log(result);
       });
-  };
+    };
+    
+    
 
   useEffect(() => {
     getSinglePembayaran();
@@ -84,7 +98,7 @@ export default function Kode_bayar_spp_transaksi({ params }) {
   console.log(singelPembayaran);
 
   const bayarSppHandle = async (bulan) => {
-    let res;
+    let res,detailRes;
     if (confirm("Yakin menghapus kelas")) {
       switch (bulan) {
         case "juli":
@@ -92,9 +106,19 @@ export default function Kode_bayar_spp_transaksi({ params }) {
             .from("bayar_spp")
             .update({
               juli: singelPembayaran?.kode_spp?.nominal,
+              bulan_terakhir_bayar: 'juli'
+
             })
             .eq("kode_bayar_spp", params.kodebayar);
             console.log(res?.data);
+
+            detailRes = await supabase.from("detail_pembayaran").insert({
+              kode_bayar_spp : singelPembayaran?.kode_bayar_spp,
+              username : session?.user?.email,
+              bulan_bayar : 'juli'
+            })
+
+            console.log("detail res : ", detailRes);
             await sendEMail(res,"juli",singelPembayaran?.nis?.email_wali,rupiah(singelPembayaran?.kode_spp?.nominal))
           break;
         case "agustus":
@@ -102,9 +126,18 @@ export default function Kode_bayar_spp_transaksi({ params }) {
             .from("bayar_spp")
             .update({
               agustus: singelPembayaran?.kode_spp?.nominal,
+              bulan_terakhir_bayar: 'agustus'
             })
             .eq("kode_bayar_spp", params.kodebayar);
             console.log(res?.data);
+
+            detailRes = await supabase.from("detail_pembayaran").insert({
+              kode_bayar_spp : singelPembayaran?.kode_bayar_spp,
+              username : session?.user?.email,
+              bulan_bayar : 'agustus'
+            })
+
+            console.log("detail res : ", detailRes);
             await sendEMail(res,"agustus",singelPembayaran?.nis?.email_wali,rupiah(singelPembayaran?.kode_spp?.nominal))
           break;
         case "september":
@@ -112,9 +145,19 @@ export default function Kode_bayar_spp_transaksi({ params }) {
             .from("bayar_spp")
             .update({
               september: singelPembayaran?.kode_spp?.nominal,
+              bulan_terakhir_bayar: 'september',
+              status: 'Lunas UTS Smester 1'
             })
             .eq("kode_bayar_spp", params.kodebayar);
             console.log(res?.data);
+
+            detailRes = await supabase.from("detail_pembayaran").insert({
+              kode_bayar_spp : singelPembayaran?.kode_bayar_spp,
+              username : session?.user?.email,
+              bulan_bayar : 'september'
+            })
+
+            console.log("detail res : ", detailRes);
             await sendEMail(res,"september",singelPembayaran?.nis?.email_wali,rupiah(singelPembayaran?.kode_spp?.nominal))
           break;
         case "oktober":
@@ -122,9 +165,18 @@ export default function Kode_bayar_spp_transaksi({ params }) {
             .from("bayar_spp")
             .update({
               oktober: singelPembayaran?.kode_spp?.nominal,
+              bulan_terakhir_bayar: 'oktober',
             })
             .eq("kode_bayar_spp", params.kodebayar);
             console.log(res?.data);
+
+            detailRes = await supabase.from("detail_pembayaran").insert({
+              kode_bayar_spp : singelPembayaran?.kode_bayar_spp,
+              username : session?.user?.email,
+              bulan_bayar : 'oktober'
+            })
+
+            console.log("detail res : ", detailRes);
             await sendEMail(res?.data,"oktober",singelPembayaran?.nis?.email_wali,rupiah(singelPembayaran?.kode_spp?.nominal))
           break;
         case "november":
@@ -132,10 +184,19 @@ export default function Kode_bayar_spp_transaksi({ params }) {
             .from("bayar_spp")
             .update({
               november: singelPembayaran?.kode_spp?.nominal,
+              bulan_terakhir_bayar: 'november',
             })
             .eq("kode_bayar_spp", params.kodebayar);
 
           console.log(res?.data);
+
+          detailRes = await supabase.from("detail_pembayaran").insert({
+            kode_bayar_spp : singelPembayaran?.kode_bayar_spp,
+            username : session?.user?.email,
+            bulan_bayar : 'november'
+          })
+
+          console.log("detail res : ", detailRes);
           await sendEMail(res,"november",singelPembayaran?.nis?.email_wali,rupiah(singelPembayaran?.kode_spp?.nominal))
           break;
         case "desember":
@@ -143,9 +204,19 @@ export default function Kode_bayar_spp_transaksi({ params }) {
             .from("bayar_spp")
             .update({
               desember: singelPembayaran?.kode_spp?.nominal,
+              bulan_terakhir_bayar: 'desember',
+              status: 'Lunas UAS Smester 1'
             })
             .eq("kode_bayar_spp", params.kodebayar);
             console.log(res?.data);
+
+            detailRes = await supabase.from("detail_pembayaran").insert({
+              kode_bayar_spp : singelPembayaran?.kode_bayar_spp,
+              username : session?.user?.email,
+              bulan_bayar : 'desember'
+            })
+
+            console.log("detail res : ", detailRes);
             await sendEMail(res,"desember",singelPembayaran?.nis?.email_wali,rupiah(singelPembayaran?.kode_spp?.nominal))
           break;
         case "januari":
@@ -153,9 +224,18 @@ export default function Kode_bayar_spp_transaksi({ params }) {
             .from("bayar_spp")
             .update({
               januari: singelPembayaran?.kode_spp?.nominal,
+              bulan_terakhir_bayar: 'januari',
             })
             .eq("kode_bayar_spp", params.kodebayar);
             console.log(res?.data);
+
+            detailRes = await supabase.from("detail_pembayaran").insert({
+              kode_bayar_spp : singelPembayaran?.kode_bayar_spp,
+              username : session?.user?.email,
+              bulan_bayar : 'januari'
+            })
+
+            console.log("detail res : ", detailRes);
             await sendEMail(res,"januari",singelPembayaran?.nis?.email_wali,rupiah(singelPembayaran?.kode_spp?.nominal))
           break;
         case "februari":
@@ -163,9 +243,17 @@ export default function Kode_bayar_spp_transaksi({ params }) {
             .from("bayar_spp")
             .update({
               februari: singelPembayaran?.kode_spp?.nominal,
+              bulan_terakhir_bayar: 'februari',
             })
             .eq("kode_bayar_spp", params.kodebayar);
             console.log(res?.data);
+            detailRes = await supabase.from("detail_pembayaran").insert({
+              kode_bayar_spp : singelPembayaran?.kode_bayar_spp,
+              username : session?.user?.email,
+              bulan_bayar : 'februari'
+            })
+
+            console.log("detail res : ", detailRes);
             await sendEMail(res,"februari",singelPembayaran?.nis?.email_wali,rupiah(singelPembayaran?.kode_spp?.nominal))
           break;
         case "maret":
@@ -173,9 +261,19 @@ export default function Kode_bayar_spp_transaksi({ params }) {
             .from("bayar_spp")
             .update({
               maret: singelPembayaran?.kode_spp?.nominal,
+              bulan_terakhir_bayar: 'maret',
+              status: 'Lunas UTS Smester 2'
             })
             .eq("kode_bayar_spp", params.kodebayar);
             console.log(res?.data);
+
+            detailRes = await supabase.from("detail_pembayaran").insert({
+              kode_bayar_spp : singelPembayaran?.kode_bayar_spp,
+              username : session?.user?.email,
+              bulan_bayar : 'maret'
+            })
+
+            console.log("detail res : ", detailRes);
             await sendEMail(res,"maret",singelPembayaran?.nis?.email_wali,rupiah(singelPembayaran?.kode_spp?.nominal))
           break;
         case "april":
@@ -183,17 +281,39 @@ export default function Kode_bayar_spp_transaksi({ params }) {
             .from("bayar_spp")
             .update({
               april: singelPembayaran?.kode_spp?.nominal,
+              bulan_terakhir_bayar: 'april',
             })
             .eq("kode_bayar_spp", params.kodebayar);
+
+            detailRes = await supabase.from("detail_pembayaran").insert({
+              kode_bayar_spp : singelPembayaran?.kode_bayar_spp,
+              username : session?.user?.email,
+              bulan_bayar : 'april'
+            })
+
+            console.log("detail res : ", detailRes);
+
+            if(res.status === 204 ) {
+
+              await sendEMail(res,"mei",singelPembayaran?.nis?.email_wali,rupiah(singelPembayaran?.kode_spp?.nominal))
+            }
           break;
         case "mei":
           res = await supabase
             .from("bayar_spp")
             .update({
               mei: singelPembayaran?.kode_spp?.nominal,
+              bulan_terakhir_bayar: 'mei',
             })
             .eq("kode_bayar_spp", params.kodebayar);
             console.log(res?.data);
+            detailRes = await supabase.from("detail_pembayaran").insert({
+              kode_bayar_spp : singelPembayaran?.kode_bayar_spp,
+              username : session?.user?.email,
+              bulan_bayar : 'mei'
+            })
+
+            console.log("detail res : ", detailRes);
             if(res.status === 204 ) {
 
               await sendEMail(res,"mei",singelPembayaran?.nis?.email_wali,rupiah(singelPembayaran?.kode_spp?.nominal))
@@ -204,9 +324,18 @@ export default function Kode_bayar_spp_transaksi({ params }) {
             .from("bayar_spp")
             .update({
               juni: singelPembayaran?.kode_spp?.nominal,
+              bulan_terakhir_bayar: 'juni',
+              status: 'Lunas UAS Smester 2'
             })
             .eq("kode_bayar_spp", params.kodebayar);
             console.log(res?.data);
+            detailRes = await supabase.from("detail_pembayaran").insert({
+              kode_bayar_spp : singelPembayaran?.kode_bayar_spp,
+              username : session?.user?.email,
+              bulan_bayar : 'juni'
+            })
+
+            console.log("detail res : ", detailRes);
             await sendEMail(res?.data,"juni",singelPembayaran?.nis?.email_wali,rupiah(singelPembayaran?.kode_spp?.nominal))
           break;
       }
@@ -681,6 +810,38 @@ export default function Kode_bayar_spp_transaksi({ params }) {
               </div>
             </div>
           </div>
+        </div>
+
+        <div className="row border mt-3">
+          <h2>Detail Pembayaran</h2>
+          <table className="table">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Kode Bayar SPP</th>
+            <th scope="col">Detail Tanggal Bayar</th>
+            <th scope="col">Petugas Bayar</th>
+            <th scope="col">Bulan Bayar</th>
+          </tr>
+        </thead>
+        <tbody>
+          {detailPembayaran.length !== 0 ? (
+            detailPembayaran.map((j, index) => (
+              <tr key={index}>
+                <td scope="row">{index + 1}</td>
+                <td>{j.kode_bayar_spp}</td>
+                <td>{j.tgl_pembayaran}</td>
+                <td>{j.username}</td>
+                <td>{j.bulan_bayar}</td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan={4}>loading...</td>
+            </tr>
+          )}
+        </tbody>
+      </table>
         </div>
         </>
       ) : (

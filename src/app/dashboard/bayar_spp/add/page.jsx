@@ -24,7 +24,8 @@ export default function TambahDataPembayaran() {
      
       .then((result) => {
         let max = result.data[0];
-        console.log(max)
+        console.log('max : ',max)
+        //
         let hasilpotongan = max.kode_bayar_spp.slice(9,16);
         hasilpotongan = parseInt(hasilpotongan) + 1;
         hasilpotongan = hasilpotongan.toString();
@@ -84,6 +85,7 @@ export default function TambahDataPembayaran() {
         kode_bayar_spp,
         nis,
         kode_spp : kodeSpp,
+        tahun_ajar : tahunAjar,
         total_spp
       });
       if(res.status == 201) { 
@@ -226,7 +228,7 @@ export default function TambahDataPembayaran() {
 
       <div className="mb-3">
         <label htmlFor="kode_urut" className="form-label">
-          Angkatan
+          Tahun Periode
         </label>
         <input
           type="number"

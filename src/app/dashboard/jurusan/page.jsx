@@ -6,7 +6,7 @@ import Link from "next/link";
 import { usePDF } from 'react-to-pdf';
 
 export default function Page() {
-  const { toPDF, targetRef } = usePDF({filename: 'page.pdf'});
+  const { toPDF, targetRef } = usePDF({filename: 'jurusan.pdf'});
   const [jurusan, setJurusan] = useState([]);
 
   const getJurusan = () => {

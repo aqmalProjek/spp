@@ -34,6 +34,9 @@ const Navbar = () => {
               </Link>
             </li>
 
+            {session?.user?.role !== 'KEPALA SEKOLAH' && (
+              <>
+              
             <li className="nav-item dropdown">
               <a
                 className="nav-link dropdown-toggle"
@@ -48,10 +51,13 @@ const Navbar = () => {
               <ul
                 className="dropdown-menu"
                 aria-labelledby="navbarDropdownMenuLink"
-              >
+                >
+                {session?.user?.role === 'admin' && (
+                  <>
+                  
                 <li>
-                  <Link className="dropdown-item" href="/dashboard/siswa">
-                    Siswa
+                  <Link className="dropdown-item" href="/dashboard/pengguna">
+                    Pengguna
                   </Link>
                 </li>
                 <li>
@@ -69,14 +75,14 @@ const Navbar = () => {
                     SPP
                   </Link>
                 </li>
-                {session?.user?.role === 'admin' && (
-
+                  </>
+                )}
+                
                 <li>
-                  <Link className="dropdown-item" href="/dashboard/pengguna">
-                    Pengguna
+                  <Link className="dropdown-item" href="/dashboard/siswa">
+                    Siswa
                   </Link>
                 </li>
-                )}
 
                 <li>
                   <Link className="dropdown-item" href="/dashboard/bayar_spp">
@@ -108,6 +114,9 @@ const Navbar = () => {
                 </li>
               </ul>
             </li>
+              </>
+            ) }
+
 
             <li className="nav-item dropdown">
               <a
@@ -143,6 +152,12 @@ const Navbar = () => {
                   </Link>
                 </li>
               </ul>
+            </li>
+
+            <li className="nav-item">
+              <Link className="nav-link" aria-current="page" href="/dashboard/setting">
+                Setting Aplikasi
+              </Link>
             </li>
 
             
